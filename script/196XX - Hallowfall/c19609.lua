@@ -32,32 +32,25 @@ s.listed_series={0x77b}
 
 function s.setfilter(c)
 	return c:IsSetCard(0x77b) and c:IsSpellTrap() and c:IsFaceup() and c:IsSSetable()
-end
-
-function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
+ end
+ 
+ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 		if ft<0 then return false end
 		local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_REMOVED,0,nil)
 		return #g>0 and (ft>0 or g:IsExists(Card.IsType,1,nil,TYPE_FIELD))
 	end
-end
-
-function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_REMOVED,0,nil)
-	if #g==0 then return end
-	
+ end
+ 
+ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	if ft<0 then return end
 	
-	local sg=aux.SelectUnselectGroup(g,e,tp,1,99,function(sg)
-		local ft2=Duel.GetLocationCount(tp,LOCATION_SZONE)
-		local ct=sg:FilterCount(Card.IsType,nil,TYPE_FIELD)
-		return #sg-(ct>0 and 1 or 0)<=ft2
-	end,1,tp,HINTMSG_SET)
+	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_REMOVED,0,nil)
+	local sg=aux.SelectUnselectGroup(g,e,tp,1,math.min(99,ft),aux.dncheck,1,tp,HINTMSG_SET)
 	
 	if #sg>0 and Duel.SSet(tp,sg)>0 then
-		--Destroy cards
 		local ct=sg:FilterCount(Card.IsLocation,nil,LOCATION_ONFIELD)
 		local dg=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
 		if ct>0 and #dg>0 then
@@ -67,7 +60,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Destroy(sg2,REASON_EFFECT)
 		end
 	end
-end
+ end
 
 function s.thfilter(c)
 	return c:IsSetCard(0x77b) and c:IsMonster() and c:IsAbleToHand()

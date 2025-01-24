@@ -60,7 +60,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.posfilter(c)
-	return c:IsSetCard(0x77b) and c:IsFaceup() and c:IsCanChangePosition()
+	return c:IsSetCard(0x77b) and c:IsFaceup() and c:IsCanChangePosition() and c:IsPosition(POS_FACEUP_ATTACK)
 end
 
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
